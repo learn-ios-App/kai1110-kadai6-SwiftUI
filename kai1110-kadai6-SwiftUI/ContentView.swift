@@ -1,21 +1,52 @@
-//
-//  ContentView.swift
-//  kai1110-kadai6-SwiftUI
-//
-//  Created by 渡邊魁優 on 2022/12/12.
-//
 
 import SwiftUI
 
 struct ContentView: View {
+    @State private var randomNumber = Int.random(in: 1...100)
+    @State private var answerNumber: Double = 50
+    @State private var isAlert = false
+    @State private var alertText = ""
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        VStack(spacing: 50) {
+            Text("\(randomNumber)")
+                .font(.largeTitle)
+            
+            VStack {
+                Slider(value: $answerNumber, in: 1...100)
+                HStack {
+                    Text("1")
+                    Spacer()
+                    Text("100")
+                }
+            }
+            .padding()
+            
+            Button(action: {
+                checkNumber()
+                isAlert = true
+            }) {
+                Text("判定!")
+                    .font(.title2)
+            }
         }
-        .padding()
+        .alert("結果", isPresented: $isAlert) {
+            Button("再挑戦") {
+                randomNumber = Int.random(in: 1...100)
+            }
+        } message: {
+            let intAnswerNumber = Int(answerNumber)
+            Text("\(alertText) \n あなたの値:\(intAnswerNumber)")
+        }
+    }
+    func checkNumber() {
+        let intAnswerNumber = Int(answerNumber)
+        if randomNumber == intAnswerNumber {
+            alertText = "あたり"
+        }
+        else {
+            alertText = "はずれ"
+        }
     }
 }
 
